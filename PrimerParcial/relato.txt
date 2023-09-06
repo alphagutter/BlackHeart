@@ -1,0 +1,34 @@
+BlackHeart
+
+Isaac Helman
+
+
+BlackHeart es un comedor temático de videojuegos, implementamos un videojuego basado en el lugar, donde nuestra misión es lograr que todos nuestros 
+clientes se vuelvan aficionados.
+En el local tenemos consolas con las que se pueden jugar, espacios que admirar, 
+un menú de comidas una más rica que la otra, y empleados que trabajar en él.
+Tenemos 3 tipos de personas que interactúan por él:
+Cajero: Es el que atiende en la caja a los clientes, siempre que viene alguno y este no sabe que actividad realizar, sugiere una acción o simplemente espera 
+a que ellos se muevan por su cuenta. Los cajeros también deben limpiar el lugar, de modo que tenemos por lo menos dos, uno que si o si atiende, y otro que 
+se encarga de mantener el lugar, pero los dos tienen una barra de cansancio que logra que las sugerencias que le demos a los clientes se comporten de manera 
+errónea, así que para mantener ese balance, los cajeros pueden jugar a las consolas mientras los clientes están atendidos o no hay nadie en el lugar.
+Cocinero: Recibe la lista de comidas que los cajeros le pasan, pueden elegir si realizarlas, o dejar la lista en pausa para el siguiente turno, ya que 
+depende a la complejidad del plato, su barra de cansancio aumenta en mayor o menor medida, también tenemos como mínimo 2 en el local, y los mismos deben 
+descansar para mantener su balance, y no comenzar a estropear las comidas que mandan a los clientes.
+Cliente: Entre las acciones que pueden realizar se encuentran: recorrer el lugar, jugar a las consolas que están disponibles, comer, y descansar. 
+
+Vienen en un tiempo aleatorio del día(implementación posible de versión gráfica, en la de caracteres será por turnos), con un estado de ánimo aleatorio que, determina si quieren hacer una cosa u otra primero, si se encuentran en un buen 
+ánimo, son más susceptibles a realizar acciones que no estarían dispuestos en un inicio, y si no llegan de buena manera y un cajero sugiere algo 
+que no les gusta, tienen como perdido ese cliente, no va a volver de vuelta.
+
+Los clientes pueden interactuar con:
+Consolas: estas cambian la barra de entusiasmo del cliente, y cambian su disponibilidad de libre a usando cuando un cliente la agarra
+Sofa: cambian el estado de animo del cliente a uno más positivo, cambian su disponibilidad de libre a usando cuando un cliente descansa en ella
+
+
+
+
+
+Cada acción que ellos realizan, logra que ellos puedan aumentar o disminuir su nivel de cansancio, o que puedan cambiar su ánimo, 
+yo creo que ahí es donde aplico mi polimorfismo, todas las acciones que pueden realizarse en el local afectan de manera distinta 
+a las personas, tanto si sos cliente como empleado. En el caso de cliente y cajero, ambos pueden jugar, y se puede realizar una reconexion polimorfa, en la clase main hice un ejemplo
