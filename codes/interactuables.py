@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-
+from humanos import *
 
 class Sofa:
     '''Objeto con el que los objetos que heredan de "Accionable" pueden descansar'''
@@ -27,10 +27,6 @@ class Sofa:
         else:
             print(f"el sofá de color {self.color} no está disponible")
 
-
-
-
-
 class Consola:
     '''Las consolas con las que los clientes/cajeros pueden jugar, cambian su disponibilidad si alguno las está usando, cambian los estados de las personas'''
     def __init__(self, nombre, disponible = True):
@@ -47,19 +43,38 @@ class Consola:
 
 
     #el print es distinto si la consola está en uso o no
-    def jugar(self):
+    def jugar(self, jugador):
         if self.disponible == False:
-            print(f'La consola{self.nombre} está ocupada')
+
+            if self.ocupante == jugador.nombre:
+                if hasattr(jugador, 'barra_cansancio'):
+                    jugador.barra_cansancio =- 1
+                elif hasattr(jugador, 'entusiasmo'):
+                    jugador.entusiasmo =+ 1
+            else:
+                print(f'La consola{self.nombre} está ocupada')
         else:
             self.disponible = False
-            print(f'Jugando en la consola {self.nombre}')
+            self.ocupante = jugador.nombre
+            jugador.disponible[0] = False
+            jugador.disponible[1] = 'jugando'
+            jugador.disponible[2] = self.nombre
+            if hasattr(jugador, 'barra_cansancio'):
+                jugador.barra_cansancio =- 1
+            elif hasattr(jugador, 'entusiasmo'):
+                jugador.entusiasmo =+ 1
+
+    def desjugar(self):
+
+        self.disponible = True
+        self.ocupante = None
+
 
 class Comida:
     '''Las comidas cambian el estado de hambre de los clientes'''
-    def __init__(self, nombre, nivel_sabor, nivel_complejidad):
+    def __init__(self, nombre, nivel_sabor):
         self.nombre = nombre
         self.nivel_sabor = nivel_sabor
-        self.nivel_complejidad = nivel_complejidad
 
     def comer(self):
         pass

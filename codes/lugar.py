@@ -2,14 +2,14 @@
 #los que las personas pueden interactuar
 from abc import ABC, abstractmethod
 from humanos import *
+from interactuables import *
 
 class Comedor:
     '''Es el objeto de el lugar en si, donde almacenamos la caja donde están los cajeros,
     la cocina donde están los cocinceros, a los clientes que vienen a interactuar, las consolas y los sofás'''
     def __init__(self, nombre):
         self.nombre = nombre
-        self.caja = []                  #array de cajeros
-        self.cocina = []                #array de cocineros
+        self.caja = None           #caja, donde están los cajeros y la fila a atender
         self.clientes = []              #array de clientes
         self.consolas = []              #array de consolas
         self.zona_relax = []            #array de sofás
@@ -19,9 +19,7 @@ class Comedor:
     def agregar_trabajador(self, trabajador):
         '''agregamos a los arrays de cada tipo de trabajador de acuerdo al tipo de objeto que nos pasen'''
         if isinstance(trabajador, Cajero):
-            self.caja.append(trabajador)
-        elif isinstance(trabajador, Cocinero):
-            self.cocina.append(trabajador)
+            self.caja.cajeros.append(trabajador)
 
     def agregar_cliente(self, cliente):
         self.clientes.append(cliente)
@@ -48,6 +46,11 @@ class Comedor:
     def agregar_consolas(self, Consola):
         self.consolas.append(Consola)
 
-    #implmementar la creacion del mapa
-    def recorrer(self):
-        pass
+
+class Caja:
+
+    def __init__(self):
+        self.cajeros = []       #array de cajeros
+        self.fila = []          #array de clientes
+
+    
