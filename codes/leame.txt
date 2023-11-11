@@ -1,0 +1,11 @@
+proyecto BlackHeart
+
+para ejecutar el juego es necesario:
+-tener instalado python3
+
+el juego se inicializa usando el archivo main.py
+
+desde la terminal puede ejecutarse como:
+python main.py
+
+se abrirá el menú del juego para iniciar, presionar 'Y' para iniciar, y el resto, disfrutar ^^
