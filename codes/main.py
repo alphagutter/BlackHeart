@@ -3,49 +3,30 @@ from Modelo.estado_animo import *
 from Modelo.interactuables import *
 from Modelo.persona import *
 
-
 from Controlador.mecanicas import *
 
 from Vista.VistaTexto import *
 
-#comer = 0, descansar = 1, jugar = 2
 
-#Enojado = comer
-#Triste = comer o descansar
-#Feliz = descansar o jugar
+import transaction
+from instancias import *
+from database import *
 
-cajero1 = Cajero("Cajero 1")
-cajero2 = Cajero("Cajero 2")
+#instanciamos el comedor
+el_comedor = instanciar_objetos_comedor()
 
+#llamamos a la base de datos
+database = Database()
+database.root.comedor = el_comedor
 
-# Crear 20 instancias de Cliente con nombres únicos del 1 al 20
-clientes = [Cliente(f"Cliente{i}") for i in range(1, 21)]
+# guardamos los cambios hechos
+transaction.commit()
 
-# Imprimir los nombres de los clientes
+comedor_recuperado = database.root.comedor
 
+estados = instanciar_objetos_controlador()
 
-consola1 = Consola('Playstation')
-consola2 = Consola('Atari')
-sofa1 = Sofa('Carmesi', 2)
-sofa2  = Sofa('Violeta', 3)
-
-caja = []
-caja.append(cajero1), caja.append(cajero2)
-
-
-consolas = [consola1, consola2]
-
-sofas = [sofa1, sofa2]
-
-el_comedor = Comedor('BlackHeart', caja, clientes, consolas, sofas)
-
-enojado = EstadoAnimo(0, 'enojado', [0])
-triste = EstadoAnimo(1, 'triste', [0,1])
-feliz = EstadoAnimo(2, 'feliz', [0,2])
-
-estados = [enojado, triste, feliz]
-
-juego = Mecanicas(0,0,el_comedor, estados)
+juego = Mecanicas(0,0,comedor_recuperado, estados[0], estados[1])
 
 vista = Vista(juego)
 
@@ -61,9 +42,7 @@ else:
 
         vista.numero_dia()
 
-        juego.verificar_clientes()
-
-        while juego.turno_del_dia < 4:
+        while juego.turno_del_dia < 7:
 
             juego.avanzar_turno()
 
@@ -80,6 +59,9 @@ else:
                     vista.opcion_cajeros()
                 else:
                     continue
+            
+            juego.verificar_personas()
+
 
             
 
@@ -89,5 +71,5 @@ else:
     vista.final_juego()
 
 
-
+database.close()
         

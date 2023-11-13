@@ -69,9 +69,10 @@ class Mecanicas:
             self.clientes_nuevos.append(cliente)
             self.clientes_del_dia.append(cliente)
 
-        print(f'Clientes en el comedor en esta ronda: {len(self.clientes_del_dia)}')
-
         self.generar_estado_clientes()
+        #retornar clientes nuevos del comedor de la ronda
+        return(f'Clientes en el comedor en esta ronda: {len(self.clientes_del_dia)}')
+
 
 
     def generar_estado_clientes(self):

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
+import persistent
 
-
-class Interactuables:
+class Interactuables(ABC, persistent.Persistent):
     '''Son los objetos que modifican los estados de las personas'''
     def __init__(self):
         self.id_accion = None

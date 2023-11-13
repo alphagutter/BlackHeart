@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
-import random
+import persistent
 
-class Persona:
+class Persona(ABC, persistent.Persistent):
     '''pequeña clase abstracta, donde definimos 2 clases a utilizar en distintos tipos, los cajeros y los clientes'''
     def __init__(self, nombre):
         self.nombre = nombre
@@ -64,6 +64,7 @@ class Cajero(Persona):
         self.objeto_utilizado = None
         self.disponible = True
         print(f'@@  {self.nombre} ya no descansa')
+        self.tiempo_ocupado = 0
                 
 
     def jugar(self, consola):
@@ -83,6 +84,7 @@ class Cajero(Persona):
         self.objeto_utilizado = None
         self.disponible = True
         print(f'{self.nombre} ya no juega')
+        self.tiempo_ocupado = 0
 
 
 
@@ -115,6 +117,7 @@ class Cliente(Persona):
         self.objeto_utilizado = None
         self.disponible = True
         print(f'{self.nombre} ya no descansa')
+        self.tiempo_ocupado = 0
 
 
 
@@ -135,6 +138,7 @@ class Cliente(Persona):
         self.objeto_utilizado = None
         self.disponible = True
         print(f'{self.nombre} ya no juega')
+        self.tiempo_ocupado = 0
 
 
     #especificaciones de tipos de estados:

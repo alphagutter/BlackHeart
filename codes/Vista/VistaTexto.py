@@ -58,57 +58,55 @@ class Vista:
                 else:
                     disponibilidad = 'ocupado'
 
+
+
                 #imprimimos la disponibilidad del cliente
                 print(f'>>>>    El cliente {cliente.nombre} está {disponibilidad}')
                 print(f'         Estado: {cliente.estado_animo.nombre}, entusiasmo: {cliente.entusiasmo}')
+                
         else:
-            print('No hay clientes nuevos')
+            print('No hay clientes nuevos\n\n')
 
     def opcion_cajeros(self):
         cajeros = self.controlador.comedor.caja
 
-        for cajero in cajeros:
+        while any(cajero.disponible for cajero in cajeros):
 
-            if cajero.disponible:
-                  
-                while True:
-                    try:
+            for cajero in cajeros:
 
-                        print(f'Controla al cajero {cajero.nombre}: \n'
-                                f'--1. Atender Fila     \n'
-                                f'--2. Sugerir Acción   \n'
-                                f'--3. Jugar            \n'
-                                f'--4. Descansar')
-                                
-                        opcion_cajero = int(input('> '))
-                        if 1 <= opcion_cajero <= 4:
+                if cajero.disponible:
 
-                            if 1 <= opcion_cajero <= 2 and cajero.barra_cansancio >= 5:
-                                print('El cajero está burnout, no quiere trabajar')
+                            print(f'Controla al cajero {cajero.nombre}: \n'
+                                    f'--1. Ver estado del cajero        \n'
+                                    f'--2. Atender Fila                 \n'
+                                    f'--3. Sugerir Acción               \n'
+                                    f'--4. Jugar                        \n'
+                                    f'--5. Descansar                    \n')
+                                    
+                            opcion_cajero = int(input('> '))
+                            if opcion_cajero == 1:
+                                self.mostrar_estado_cajero(cajero)
+                            elif opcion_cajero in [2, 3] and cajero.barra_cansancio >= 5:
+                                print('El cajero está burnout, no quiere trabajar\n\n')
                             else:
-                                break  # Salir del bucle si el valor es válido
-                        else:
-                            print("El número debe estar en el rango de 1 a 4. Inténtelo de nuevo.")
-                    except ValueError:
-                                print("Ingrese un número entero válido.")
+                                if opcion_cajero == 2:
+                                    self.controlador.atender_fila(cajero)
+                                elif opcion_cajero == 3:
+                                    self.controlador.sugerir_accion(cajero)
+                                elif opcion_cajero == 4:
+                                    self.controlador.jugar(cajero)
+                                elif opcion_cajero == 5:
+                                    self.controlador.descansar(cajero)
+                elif not cajero.disponible:
+                    try:
+                        print(f'el cajero está ocupado, {self.controlador.accion_realizada(cajero)}\n')
+                    except AttributeError as e:
+                        print(f"Error: {e}")
 
-                if opcion_cajero == 1: 
-                    self.controlador.atender_fila(cajero)
-
-                elif opcion_cajero == 2:
-                    self.controlador.sugerir_accion(cajero)
-
-                elif opcion_cajero == 3:
-                    self.controlador.jugar(cajero)
-
-                elif opcion_cajero == 4:
-                    self.controlador.descansar(cajero)
-            else:
-                print(f'El cajero está ocupado, {self.controlador.accion_realizada(cajero)}')
 
     def terminar_dia(self):
 
-            print(f'=== puse F para continuar... ===')
+            print(f'\n\n=== puse F para continuar... ===')
 
             opcion_usuario = input('> ')
             opcion_usuario.upper()
@@ -120,7 +118,7 @@ class Vista:
             
     def final_juego(self):
 
-        print(f'\n La partida ha terminado!!')
+        print(f'\n\n\n La partida ha terminado!!')
 
         clientes_fieles = []
 
@@ -145,3 +143,6 @@ class Vista:
         print(f'Tu puntaje es de: {total_puntos}')
         print(f'Gracias por jugar! <3')
 
+    def mostrar_estado_cajero(self, cajero):
+        print(f'@@  Cajero: {cajero.nombre}'
+              f'    cansancio: {cajero.barra_cansancio}')
