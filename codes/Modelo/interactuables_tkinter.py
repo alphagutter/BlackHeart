@@ -9,7 +9,7 @@ class Interactuable(ABC, persistent.Persistent):
         self.ocupante = None
 
     @abstractmethod
-    def accion(persona):
+    def accion():
         pass
 
     def des_accionar(self):
@@ -34,11 +34,11 @@ class Consola(Interactuable):
         )
 
 
-    def accion(self, persona):
+    def accion(self, nombre):
         '''Se le pasa el nombre del jugador que jugará a la consola, y cambia su disponibilidad'''
-        self.ocupante = persona
+        self.ocupante = nombre
         self.disponible = False
-        return(f'{self.ocupante.nombre} está jugando a la consola {self.nombre}')
+        return(f'{self.ocupante} está jugando a la consola {self.nombre}')
 
 
 
@@ -61,8 +61,8 @@ class Sofa(Interactuable):
         )
         
 
-    def accion(self,persona):
+    def accion(self,nombre):
         '''Recibe el nombre de la persona que va a descansar, y luego la guarda en sus atributos'''
-        self.ocupante = persona
+        self.ocupante = nombre
         self.disponible = False
-        return(f'{self.ocupante.nombre} está descansando en el sofá {self.nombre}')
+        return(f'{self.ocupante} está descansando en el sofá {self.nombre}')

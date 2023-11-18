@@ -17,20 +17,6 @@ class Persona(ABC, persistent.Persistent):
     def descansar():
         pass
 
-    def des_jugar(self):
-        '''Se le desvincula a la persona de la consola que tiene en su inventario'''
-        self.objeto_utilizado = None
-        self.disponible = True
-        print(f'{self.nombre} ya no juega')
-        self.tiempo_ocupado = 0
-
-    def des_descansar(self):
-        '''Se le desvincula a la persona del sofá que tiene en su inventario'''
-        self.objeto_utilizado = None
-        self.disponible = True
-        print(f'{self.nombre} ya no descansa')
-        self.tiempo_ocupado = 0
-
 
 
 
@@ -48,15 +34,15 @@ class Cajero(Persona):
 
     def sugerir_accion(self, accion):
         '''El cajero sugiere una acción al cliente que esté en frente de la fila'''
-        print(f'{self.nombre} sugiere {accion}')
         self.barra_cansancio += 1
+        return(f'{self.nombre} sugiere {accion}')
 
         
 
     def atender_fila(self, cliente):
         '''El cajero entra en la caja, le pasamos la fila de clientes y el menú para entregar la comida'''
-        print(f'El cajero atenderá a {cliente.nombre}')
         self.barra_cansancio += 1
+        return(f'El cajero atenderá a {cliente.nombre}')
 
 
 
@@ -69,10 +55,16 @@ class Cajero(Persona):
         self.tiempo_ocupado += 1
 
         if self.barra_cansancio <= 0:
-            print(f'El cajero está descansando al pedo...')
+            return(f'@@  El cajero está descansando al pedo...')
         else:
-            print(f'{self.nombre} descansa a gusto')
+            return(f'@@  {self.nombre} descansa a gusto')
         
+
+    def des_descansar(self):
+        self.objeto_utilizado = None
+        self.disponible = True
+        print(f'@@  {self.nombre} ya no descansa')
+        self.tiempo_ocupado = 0
                 
 
     def jugar(self, consola):
@@ -84,10 +76,15 @@ class Cajero(Persona):
         self.tiempo_ocupado += 1
         
         if self.tiempo_ocupado <= 1:
-            print(f'{self.nombre} está jugando con {self.objeto_utilizado.nombre}')
+            return(f'{self.nombre} está jugando con {self.objeto_utilizado.nombre}')
         else:
-            print(f'{self.nombre} sigue jugando')
+            return(f'{self.nombre} sigue jugando')
 
+    def des_jugar(self):
+        self.objeto_utilizado = None
+        self.disponible = True
+        print(f'{self.nombre} ya no juega')
+        self.tiempo_ocupado = 0
 
 
 
@@ -116,7 +113,11 @@ class Cliente(Persona):
 
         print(f'{self.nombre} está descansando en {self.objeto_utilizado.nombre}')
 
-
+    def des_descansar(self):
+        self.objeto_utilizado = None
+        self.disponible = True
+        print(f'{self.nombre} ya no descansa')
+        self.tiempo_ocupado = 0
 
 
 
@@ -133,6 +134,11 @@ class Cliente(Persona):
         else:
             print(f'{self.nombre} sigue jugando')
 
+    def des_jugar(self):
+        self.objeto_utilizado = None
+        self.disponible = True
+        print(f'{self.nombre} ya no juega')
+        self.tiempo_ocupado = 0
 
 
     #especificaciones de tipos de estados:

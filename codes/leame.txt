@@ -1,11 +1,47 @@
 proyecto BlackHeart
 
 para ejecutar el juego es necesario:
--tener instalado python3
+-instalar python3
+-instalar la base de datos ZODB noSQL
 
-el juego se inicializa usando el archivo main.py
+Para ejecución en caracteres:
+-ejecutar main.py
+Para ejecución con interfaz gráfica(hecha con la librería tkinter)
+-ejecutar main_tkinter.py
 
 desde la terminal puede ejecutarse como:
 python main.py
+ó
+python main_tkinter.py
 
-se abrirá el menú del juego para iniciar, presionar 'Y' para iniciar, y el resto, disfrutar ^^
+Instrucciones básicas:
+Se te da el control un restaurante, cierta cantidad de clientes entran al local, usted puede ver cuál es el estado
+de esos clientes, y de acuerdo a eso realizar sus acciones con los cajeros, que son los que tiene a su control
+directo.
+
+tienes 15 días para volver aficionado a los videojuegos a tus clientes, cada día consta de 7 turnos
+
+
+cosas a tener en cuenta para una buena partida:
+Los clientes ocupados no son interactuables por el cajero hasta que se vuelvan disponibles
+Si los cajeros están ocupados, no se tiene acceso a su menú en ese turno
+
+los cajeros pueden:
+-ver su propio estado
+-atender la fila de clientes que tienen hambre
+-sugerir una acción a los clientes que no estén haciendo nada
+-jugar con las consolas disponibles
+-descansar en los sofás disponibles
+
+en cuanto a estados de ánimo:
+Enojado: Los clientes enojados solo quieren comer, si se les recomienda descansar no harán caso, pero si se les recomienda
+jugar, se marcharán del local
+Triste: Los clientes tristes están dispuestos a comer o a descansar, pero no aceptarán la invitación de jugar
+Feliz: Solo querrán jugar o comer, no aceptarán descansar
+
+
+al final de la partida se te mostrarán los clientes que más han jugado con las consolas, cuentalos como tu puntaje
+
+y lo más importante, diviertete! que para eso fue hecho
+
+

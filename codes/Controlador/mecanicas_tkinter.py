@@ -1,11 +1,14 @@
 from Modelo.comedor import *
 from Modelo.estado_animo import *
-from Modelo.interactuables import *
-from Modelo.persona import *
+from Modelo.interactuables_tkinter import *
+from Modelo.persona_tkinter import *
+
+
 
 import random
 
 
+from tkinter import messagebox
 
 
 class Mecanicas:
@@ -16,6 +19,8 @@ class Mecanicas:
         self.clientes_del_dia = []
         self.clientes_moldeables = []
         self.clientes_nuevos = []
+        self.clientes_a_expulsar = []
+        self.clientes_atendidos = []
         self.tipos_estados = tipos_estados
         self.comidas = comidas
         self.dia_actual = 0
@@ -23,9 +28,11 @@ class Mecanicas:
         self.fin_de_juego = False
 
     def aumentar_dia(self):
+        '''Se aumenta el día en el que el juego se encuentra, se verifica si ya pasaron más de 15 días,
+        se cambia el estado de turno_del_dia a 0, se reinicia el estado de los clientes y de los cajeros'''
         self.dias_transcurridos += 1
 
-        if self.dias_transcurridos != self.dia_actual:
+        if self.dias_transcurridos != self.dia_actual and self.dias_transcurridos != 1:
             self.turno_del_dia = 0
             self.dia_actual = self.dias_transcurridos
             self.clientes_del_dia.clear()
@@ -45,7 +52,8 @@ class Mecanicas:
         '''Se avanza el turno se ordenan los clientes en el local de acuerdo a si están o no disponibles, 
         se llama a función que genera nuevos clientes para que entren'''
         self.turno_del_dia += 1
-        self.clientes_nuevos.clear()
+        if self.clientes_nuevos:
+            self.clientes_nuevos.clear()
 
         self.ordenar_clientes()
 
@@ -134,95 +142,67 @@ class Mecanicas:
                 cajero.atender_fila(cliente)
 
                 cliente.objeto_utilizado = comida
-                print(f'{cajero.nombre} entregó {comida} a {cliente.nombre}')
+
+                messagebox.showinfo(f'{cajero.nombre} entregó {comida} a {cliente.nombre}')
 
                 self.comer(cliente)
 
             fila.clear()
         else:
-            print('No hay nadie en la fila')
+            messagebox.showerror('No hay clientes en la fila')
+
         
 
 
 
-    def sugerir_accion(self, cajero):
+    def sugerir_accion(self, cajero, opcion_cajero, cliente):
         '''El cajero le recomienda acciones a los clientes que están disponibles, se encuentran en el array de
         clientes moldeables (los clientes a los que la moneda les dio "False")'''
+        if opcion_cajero == 0:
+            #corregir y pasar al mecanicas_tkinter
+            cajero.sugerir_accion('comer')
+        elif opcion_cajero == 1:
+            cajero.sugerir_accion('descansar')
+        elif opcion_cajero ==2:
+            cajero.sugerir_accion('jugar')
 
-        #lista de clientes a expulsar
-        clientes_a_expulsar = []
-        clientes_atendidos = []
+        self.accionar_cliente(cliente, opcion_cajero)
 
-        if not self.clientes_moldeables:
-            print('No hay clientes disponibles para sugerir')
-        else:
-            for cliente in self.clientes_moldeables:
-                while True:
-                    try:
-                        print(f'¿Qué acción sugerirá {cajero.nombre} a {cliente.nombre} ?: \n'
-                                    f'--0. Comer     \n'   
-                                    f'--1. Descansar\n'  
-                                    f'--2. Jugar')
-                        opcion_cajero = int(input('> '))
-                        if 0 <= opcion_cajero <= 2:
+    def accionar_cliente(self, cliente, opcion_cajero):
 
-                            if opcion_cajero == 0:
-                                cajero.sugerir_accion('comer')
-                            elif opcion_cajero == 1:
-                                cajero.sugerir_accion('descansar')
-                            elif opcion_cajero ==2:
-                                cajero.sugerir_accion('jugar')
-
-                            break  # Salir del bucle si el valor es válido
-                        else:
-                            print("El número debe estar en el rango de 0 a 2. Inténtelo de nuevo.")
-                    except ValueError:
-                        print('Introduzca un valor válido.')
-
-                #especificaciones de tipos de estados:
-                #--enojado(0): solo quiere comer, si se le recomienda jugar, se retira del local, no se enoja si le recomiendan dormir
-                #--triste(1): quiere comer o descansar, no se enoja si le recomiendan jugar
-                #--feliz(2): quiere comer o jugar, no se enoja si le recomiendan jugar
+        #especificaciones de tipos de estados:
+        #--enojado(0): solo quiere comer, si se le recomienda jugar, se retira del local, no se enoja si le recomiendan dormir
+        #--triste(1): quiere comer o descansar, no se enoja si le recomiendan jugar
+        #--feliz(2): quiere comer o jugar, no se enoja si le recomiendan jugar
+        # Verificar si el cliente está enojado y la opción es jugar
 
 
-                # Verificar si el cliente está enojado y la opción es jugar
-                if cliente.estado_animo == self.tipos_estados[0]:
+        if cliente.estado_animo == self.tipos_estados[0]:
+            #cliente enojado
 
-                    if opcion_cajero == 0:
-                        self.entrar_fila(cliente)
-                    elif opcion_cajero == 1:
-                        print(f'El cliente no va a descansar')
-                    elif opcion_cajero == 2:
-                        clientes_a_expulsar.append(cliente)
-                        clientes_atendidos.append(cliente)
-
-                elif cliente.estado_animo == self.tipos_estados[1]:
-                    
-                    if opcion_cajero == 0:
-                        self.entrar_fila(cliente)
-                    elif opcion_cajero == 1:
-                        self.descansar(cliente)
-                    elif opcion_cajero == 2:
-                        print(f'El cliente está muy triste para jugar')
-
-                elif cliente.estado_animo == self.tipos_estados[2]:
-
-                    if opcion_cajero == 0:
-                        print(f'El cliente está muy feliz como para comer')
-                    elif opcion_cajero == 1:
-                        print(f'El cliente no va a descansar, está muy feliz para eso')
-                    elif opcion_cajero == 2:
-                        self.jugar(cliente)
-
-                if cliente.disponible is False: clientes_atendidos.append(cliente)
-
-        for cliente in clientes_atendidos:
-            self.clientes_moldeables.remove(cliente)
-
-        if clientes_a_expulsar:
-            self.expulsar_clientes(clientes_a_expulsar)
-
-
+            if opcion_cajero == 0:
+                self.entrar_fila(cliente)
+            elif opcion_cajero == 1:
+                print(f'El cliente no va a descansar')
+            elif opcion_cajero == 2:
+                self.clientes_a_expulsar.append(cliente)
+                self.clientes_atendidos.append(cliente)
+        elif cliente.estado_animo == self.tipos_estados[1]:
+            #cliente triste
+            if opcion_cajero == 0:
+                self.entrar_fila(cliente)
+            elif opcion_cajero == 1:
+                self.descansar(cliente)
+            elif opcion_cajero == 2:
+                print(f'El cliente está muy triste para jugar')
+        elif cliente.estado_animo == self.tipos_estados[2]:
+            #cliente feliz
+            if opcion_cajero == 0:
+                print(f'El cliente está muy feliz como para comer')
+            elif opcion_cajero == 1:
+                print(f'El cliente no va a descansar, está muy feliz para eso')
+            elif opcion_cajero == 2:
+                self.jugar(cliente)
 
 
             
@@ -232,9 +212,11 @@ class Mecanicas:
         for consola in self.comedor.consolas:
 
             if consola.disponible == True:
-                jugador.jugar(consola)
-                consola.accion(jugador.nombre)
-                return
+                accion = ''
+                accion += jugador.jugar(consola)
+                accion += consola.accion(jugador.nombre)
+                
+                return accion
             else:
                 continue
             
@@ -246,9 +228,10 @@ class Mecanicas:
         for sofa in self.comedor.zona_relax:
 
             if sofa.disponible == True:
-                descansador.descansar(sofa)
-                sofa.accion(descansador.nombre)
-                return
+                accion = ''
+                accion += descansador.descansar(sofa)
+                accion += sofa.accion(descansador.nombre)
+                return accion
             else:
                 continue
 
@@ -259,7 +242,7 @@ class Mecanicas:
         self.comedor.fila.append(cliente)
         cliente.disponible = False
 
-        print(f'{cliente.nombre} entró en la fila')
+        messagebox.showinfo(f'{cliente.nombre} entró en la fila')
 
 
 
@@ -268,20 +251,21 @@ class Mecanicas:
         '''Para las comidas no necesitamos que sean un objeto, ya que solo las usamos como String, y no como un objeto con su propia clase'''
         estado_cliente = 1
 
+        accion = ''
 
         #acá verificaremos el estado emocional del cliente, y de acuerdo a eso, lo sumaremos en su propia funcion de comer
         if isinstance(cliente.objeto_utilizado, str):
             #cliente enojado
             if cliente.estado_animo == self.tipos_estados[0]:
                 #aquí le pasamos el estado predeterminado, ya que está enojado
-                cliente.comer(estado_cliente)
+                accion += cliente.comer(estado_cliente)
                 #cambiamos de enojado a triste
                 cliente.estado_animo = self.tipos_estados[1]
 
             #cliente triste
             elif cliente.estado_animo == self.tipos_estados[1]:
                 estado_cliente = 2
-                cliente.comer(estado_cliente)
+                accion += cliente.comer(estado_cliente)
 
                 #cambiamos de triste a feliz
                 cliente.estado_animo = self.tipos_estados[2]
@@ -291,10 +275,12 @@ class Mecanicas:
                 
                 #no se cambia su estado de ánimo
                 estado_cliente = 4
-                cliente.comer(estado_cliente)
+                accion += cliente.comer(estado_cliente)
+
+            messagebox.showinfo(accion)
 
         else:
-            return(f'{cliente.nombre} no tiene una comida en su inventario')
+            messagebox.showinfo(f'{cliente.nombre} no tiene una comida en su inventario')
 
 
 
@@ -367,7 +353,8 @@ class Mecanicas:
     def ordenar_clientes(self):
         '''Para una gestión más cómoda para el programador y el usuario, se ordena la lista de clientes en
         el local'''
-        self.clientes_del_dia = sorted(self.clientes_del_dia, key=lambda x: x.disponible, reverse=True)
+        if self.clientes_del_dia:
+            self.clientes_del_dia = sorted(self.clientes_del_dia, key=lambda x: x.disponible, reverse=True)
 
     def reiniciar_estado_cajeros(self):
         '''Se reinicia el estado de los cajeros para que puedan realizar sus acciones de vuelta'''

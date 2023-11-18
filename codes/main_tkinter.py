@@ -1,11 +1,11 @@
 from Modelo.comedor import *
 from Modelo.estado_animo import *
-from Modelo.interactuables import *
-from Modelo.persona import *
+from Modelo.interactuables_tkinter import *
+from Modelo.persona_tkinter import *
 
 from Controlador.mecanicas_tkinter import *
 
-from Vista.vista_tkinter import *
+from Vista.VistaTkinter import *
 
 
 import transaction
@@ -30,4 +30,28 @@ juego = Mecanicas(0,0,comedor_recuperado, estados[0], estados[1])
 
 vista = VistaTkinter(juego)
 
-vista.mostrar_ventana_inicial()
+
+juego.aumentar_dia()
+
+vista.inicio()
+
+
+while not juego.fin_de_juego:
+
+    juego.aumentar_dia()
+
+    while juego.turno_del_dia < 7:
+        juego.avanzar_turno()
+
+        if vista.ventana_principal == None:
+            vista.crear_ventana_principal()
+        
+        juego.verificar_personas
+
+    vista.terminar_dia()
+
+
+vista.final_juego()
+
+database.close()
+        

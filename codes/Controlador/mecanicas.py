@@ -23,6 +23,8 @@ class Mecanicas:
         self.fin_de_juego = False
 
     def aumentar_dia(self):
+        '''Se aumenta el día en el que el juego se encuentra, se verifica si ya pasaron más de 15 días,
+        se cambia el estado de turno_del_dia a 0, se reinicia el estado de los clientes y de los cajeros'''
         self.dias_transcurridos += 1
 
         if self.dias_transcurridos != self.dia_actual:
@@ -254,7 +256,8 @@ class Mecanicas:
         return(f'No hay sofás disponibles')
     
     def entrar_fila(self, cliente):
-        '''Los clientes entrarán en la cola que se encuentra en el comedor, y serán atendidos por los cajeros en la función --atender_fila--'''
+        '''Los clientes entrarán en la cola que se encuentra en el comedor, y serán atendidos por los cajeros 
+        en la función --atender_fila--'''
         self.comedor.fila.append(cliente)
         cliente.disponible = False
 
@@ -264,7 +267,8 @@ class Mecanicas:
 
 
     def comer(self, cliente):
-        '''Para las comidas no necesitamos que sean un objeto, ya que solo las usamos como String, y no como un objeto con su propia clase'''
+        '''Para las comidas no necesitamos que sean un objeto, ya que solo las usamos como String, 
+        y no como un objeto con su propia clase'''
         estado_cliente = 1
 
 
@@ -308,6 +312,7 @@ class Mecanicas:
         clientes_a_expulsar.clear()
         
     def reiniciar_estado_clientes(self):
+        '''Se reinicia el estado de todos los clientes, hayan o no estado en el local'''
         for cliente in self.comedor.clientes:
                 cliente.en_el_local = False
                 cliente.estado_animo = None
@@ -378,11 +383,11 @@ class Mecanicas:
 
     def desaccionar(self, persona):
         '''Le desvinculamos a la persona del objeto, y al objeto de la persona'''
+        persona.objeto_utilizado.des_accionar()
+
         if isinstance(persona.objeto_utilizado, Consola):
-            persona.objeto_utilizado.des_accionar()
             persona.des_jugar()
         elif isinstance(persona.objeto_utilizado, Sofa):
-            persona.objeto_utilizado.des_accionar()
             persona.des_descansar()
 
     def reiniciar_persona(self, persona):
